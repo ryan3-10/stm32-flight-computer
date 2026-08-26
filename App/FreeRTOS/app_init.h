@@ -1,5 +1,5 @@
-#ifndef FREERTOS_APP_TASKS_H_
-#define FREERTOS_APP_TASKS_H_
+#ifndef FREERTOS_APP_INIT_H_
+#define FREERTOS_APP_INIT_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,4 +16,4 @@ void appInit(I2C_HandleTypeDef* hi2c);
 
 
 
-#endif /* FREERTOS_APP_TASKS_H_ */
+#endif /* FREERTOS_APP_INIT_H_ */
