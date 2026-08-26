@@ -4,8 +4,8 @@
 #include <stdint.h>
 
 enum class RequestType : uint8_t {
-	read = 0,
-	write
+	transmit = 0,
+	receive
 };
 
 struct I2cRequest {
@@ -13,8 +13,8 @@ struct I2cRequest {
 	uint8_t* data;
 	uint8_t dataLength;
 	RequestType type;
-	bool errorFlag = false;
 	void* context = nullptr;
+	bool errorFlag = false;
 };
 
 

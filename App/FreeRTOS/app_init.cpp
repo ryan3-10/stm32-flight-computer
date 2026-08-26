@@ -1,6 +1,7 @@
 #include "app_init.h"
 #include "callbacks.h"
 #include "i2c_bus.h"
+#include "i2c_device.h"
 #include "requests.h"
 #include "task_codes.h"
 #include <FreeRTOS.h>

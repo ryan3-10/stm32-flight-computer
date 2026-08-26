@@ -4,24 +4,26 @@
 #include "requests.h"
 #include <array>
 
-template <uint8_t RxLength, uint8_t TxLength>
+template <uint8_t TxLength, uint8_t RxLength>
 class I2cDevice {
 public:
-	I2cDevice() = default;
 	virtual ~I2cDevice() = default;
 
-	I2cRequest createI2cReadReq() {
-		return {address, rx.data(), rx.size(), RequestType::read};
+	I2cRequest createI2cTxReq() {
+		return {m_address, m_tx.data(), TxLength, RequestType::transmit, m_context};
 	}
 
-	I2cRequest createI2cWriteReq() {
-		return {address, tx.data(), tx.size(), RequestType::write};
+	I2cRequest createI2cRxReq() {
+		return {m_address, m_rx.data(), RxLength, RequestType::receive, m_context};
 	}
 
 protected:
-	uint8_t address;
-	std::array<uint8_t, RxLength> rx;
-	std::array<uint8_t, TxLength> tx;
+	I2cDevice<TxLength, RxLength>(void* context) : m_context(context) {} // Base class only
+
+	uint8_t m_address;
+	std::array<uint8_t, TxLength> m_tx;
+	std::array<uint8_t, RxLength> m_rx;
+	void* m_context;
 };
 
 #endif

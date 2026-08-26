@@ -11,10 +11,10 @@ void I2cBus::init(I2C_HandleTypeDef* hi2c) {
 void I2cBus::processRequest(I2cRequest& req) {
 	switch (req.type) {
 
-	case RequestType::write:
+	case RequestType::transmit:
 		HAL_I2C_Master_Transmit_DMA(m_hi2c, req.address, req.data, req.dataLength);
 		break;
-	case RequestType::read:
+	case RequestType::receive:
 		HAL_I2C_Master_Receive_DMA(m_hi2c, req.address, req.data, req.dataLength);
 		break;
 	}
