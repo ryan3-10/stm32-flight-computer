@@ -5,14 +5,11 @@
 #include <queue.h>
 #include <task.h>
 
-void workI2cQueue(void* queue) {
-	auto i2cQueue = static_cast<QueueHandle_t>(queue);
-	I2cRequest* req;
+void workI2cQueue(void* i2cBus) {
+	auto bus = static_cast<I2cBus*>(i2cBus);
 
 	while (true) {
-		xQueueReceive(i2cQueue, &req, portMAX_DELAY);
-		I2cBus::instance().processRequest(*req);
-		ulTaskNotifyTake(pdTRUE, portMAX_DELAY); // Sleep until DMA complete
+		bus->processNextReq();
 	}
 }
 

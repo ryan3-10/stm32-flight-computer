@@ -1,6 +1,7 @@
 #ifndef MODELS_REQUESTS_H_
 #define MODELS_REQUESTS_H_
 
+#include "i_lock.h"
 #include <stdint.h>
 
 enum class RequestType : uint8_t {
@@ -13,7 +14,7 @@ struct I2cRequest {
 	uint8_t* data;
 	uint8_t dataLength;
 	RequestType type;
-	void* context = nullptr;
+	ILock* mutex = nullptr;
 	bool errorFlag = false;
 };
 
