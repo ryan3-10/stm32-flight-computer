@@ -8,6 +8,6 @@
 #ifndef FREERTOS_TASK_CODES_H_
 #define FREERTOS_TASK_CODES_H_
 
-void workI2cQueue(void* i2cHandle);
+void i2cTask(void* i2cHandle);
 
 #endif /* FREERTOS_TASK_CODES_H_ */
