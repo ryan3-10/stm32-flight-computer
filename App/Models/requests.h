@@ -19,5 +19,4 @@ struct I2cRequest {
 };
 
 
-
 #endif /* MODELS_REQUESTS_H_ */
