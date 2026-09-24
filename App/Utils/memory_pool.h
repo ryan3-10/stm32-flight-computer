@@ -1,6 +1,7 @@
 #ifndef UTILS_MEMORY_POOL_H_
 #define UTILS_MEMORY_POOL_H_
 
+#include "i_allocator.h"
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -8,23 +9,21 @@
 #include <initializer_list>
 #include <stdint.h>
 
-constexpr uint8_t POOL_SIZE = 32;
-
-template <typename T>
-class MemoryPool {
+template <typename T, std::size_t poolSize>
+class MemoryPool : public IAllocator<T> {
 public:
-	T* allocate(size_t n) {
+	T* allocate(size_t n) override {
 #ifdef DEBUG
-		assert(m_index + n <= POOL_SIZE);
+		assert(m_index + n <= poolSize);
 #endif
 		auto returnVal = &m_pool[m_index];
 		m_index += n;
 		return returnVal;
 	}
 
-	T* allocate(std::initializer_list<T> initList) {
+	T* allocate(std::initializer_list<T> initList) override {
 #ifdef DEBUG
-		assert(m_index + initList.size() <= POOL_SIZE);
+		assert(m_index + initList.size() <= poolSize);
 #endif
 
 		auto returnVal = &m_pool[m_index];
@@ -34,7 +33,7 @@ public:
 	}
 
 private:
-	std::array<T, POOL_SIZE> m_pool{};
+	std::array<T, poolSize> m_pool{};
 	size_t m_index = 0;
 };
 

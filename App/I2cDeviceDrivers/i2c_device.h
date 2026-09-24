@@ -1,8 +1,8 @@
 #ifndef I2CDEVICEDRIVERS_I2CDEVICE_H_
 #define I2CDEVICEDRIVERS_I2CDEVICE_H_
 
+#include "i_allocator.h"
 #include "i_lock.h"
-#include "memory_pool.h"
 #include "requests.h"
 #include <array>
 #include <initializer_list>
@@ -19,17 +19,23 @@ public:
 	static void registerAllocator(MemoryPool<uint8_t>* pool) { s_pool = pool; }
 
 protected:
-	I2cDevice(uint8_t add, List txDat, uint8_t rxLen, ILock* rxMutex) : // Base class only
-		m_txReq({
+	// Base class only
+	I2cDevice(
+		uint8_t add,
+		const List txDat,
+		uint8_t rxLen,
+		ILock* rxMutex,
+		IAllocator<uint8_t>& allocator
+	)
+		: m_txReq({
 			.address 	= add,
-			.data 		= s_pool->allocate(txDat),
+			.data 		= allocator.allocate(txDat),
 			.dataLength	= static_cast<uint8_t>(txDat.size()),
 			.type 		= RequestType::transmit
-		}),
-
-		m_rxReq({
+		})
+		, m_rxReq({
 			.address 	= add,
-			.data		= s_pool->allocate(rxLen),
+			.data		= allocator.allocate(rxLen),
 			.dataLength	= rxLen,
 			.type		= RequestType::receive,
 			.mutex		= rxMutex
@@ -37,7 +43,6 @@ protected:
 	{}
 
 private:
-	static inline MemoryPool<uint8_t>* s_pool = nullptr;
 	I2cRequest m_txReq;
 	I2cRequest m_rxReq;
 };
