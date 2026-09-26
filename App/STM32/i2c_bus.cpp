@@ -48,11 +48,11 @@ void I2cBus::handleDmaCompleteIsr() {
 }
 
 extern "C" {
-    void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c) {
+    void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef*) {
     	I2cBus::instance().handleDmaCompleteIsr();
     }
 
-    void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c) {
+    void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef*) {
     	I2cBus::instance().handleDmaCompleteIsr();
     }
 }

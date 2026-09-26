@@ -38,7 +38,7 @@ public:
 	}
 
 private:
-	uint16_t rawTemp() {
+	uint16_t rawTemp() const {
 		return (rxReq().data[0] << 8) | rxReq().data[1];
 	}
 };

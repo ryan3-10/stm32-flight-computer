@@ -5,8 +5,9 @@
 
 template <typename T>
 class IAllocator {
-	T* allocate(std::size_t n) = 0;
-	T* allocate(std::initializer_list<T> initList) = 0;
+public:
+	virtual T* allocate(std::size_t n) = 0;
+	virtual T* allocate(std::initializer_list<T> initList) = 0;
 };
 
 

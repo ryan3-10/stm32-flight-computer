@@ -10,13 +10,11 @@
 
 class I2cDevice {
 	using List = std::initializer_list<uint8_t>;
-	using Pool = MemoryPool<uint8_t>;
 
 public:
 	virtual ~I2cDevice() = default;
 	I2cRequest txReq() const { return m_txReq; }
 	I2cRequest rxReq() const { return m_rxReq; }
-	static void registerAllocator(MemoryPool<uint8_t>* pool) { s_pool = pool; }
 
 protected:
 	// Base class only
