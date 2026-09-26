@@ -11,7 +11,6 @@
 #include <task.h>
 
 namespace {
-
 	constexpr uint8_t QUEUE_SIZE = 10;
 	TaskHandle_t i2cTaskHandle;
 	FreeRtosContext i2cContext(i2cTaskHandle);
