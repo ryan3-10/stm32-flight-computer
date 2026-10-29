@@ -7,7 +7,7 @@
 
 class FreeRtosContext : public IContext {
 public:
-	FreeRtosContext(TaskHandle_t task) : m_task(task) {}
+	FreeRtosContext(TaskHandle_t& task) : m_task(task) {}
 
 	void sleep() override {
 		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
@@ -20,7 +20,7 @@ public:
 	}
 
 private:
-	TaskHandle_t m_task;
+	TaskHandle_t& m_task;
 };
 
 

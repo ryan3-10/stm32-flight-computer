@@ -26,7 +26,7 @@ public:
 	    // Allocate raw uninitialized memory with correct alignment for T
 	    alignas(T) unsigned char buffer[sizeof(T)];
 
-	    // Copy raw bytes into our uninitialized buffer
+	    // Copy raw bytes into uninitialized buffer
 	    xQueueReceive(m_queue, buffer, portMAX_DELAY);
 
 	    // Move/Copy construct the object into the return value slot

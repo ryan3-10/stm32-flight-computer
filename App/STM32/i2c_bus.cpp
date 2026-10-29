@@ -30,6 +30,7 @@ void I2cBus::processNextReq() {
 
 	case RequestType::transmit:
 		HAL_I2C_Master_Transmit_DMA(m_hi2c, req.address, req.data, req.dataLength);
+//		HAL_I2C_Master_Transmit(m_hi2c, req.address, req.data, req.dataLength, HAL_MAX_DELAY);
 		break;
 	case RequestType::receive:
 		HAL_I2C_Master_Receive_DMA(m_hi2c, req.address, req.data, req.dataLength);
