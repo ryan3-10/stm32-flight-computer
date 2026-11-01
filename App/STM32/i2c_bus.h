@@ -9,22 +9,22 @@
 class I2cBus {
 
 public:
-	static I2cBus& instance() { return *s_instance; }
-	void init(I2C_HandleTypeDef* hi2c, IContext* context, IQueue<I2cRequest>* queue);
-	void processNextReq();
-	void submitRequest(const I2cRequest req) { m_queue->push(req); }
-	void handleDmaCompleteIsr();
+	I2cBus(IQueue<I2cRequest>& queue, IContext& context) : m_queue(queue), m_context(context)
+	{}
 
-private:
-	I2cBus() = default;
 	~I2cBus() = default;
 	I2cBus(const I2cBus&) = delete;
 	I2cBus& operator=(const I2cBus&) = delete;
 
-	inline static I2cBus* s_instance = nullptr;
+	void bindHi2c(I2C_HandleTypeDef* hi2c) { m_hi2c = hi2c; }
+	void processNextReq();
+	void submitRequest(const I2cRequest req) { m_queue.push(req); }
+	void handleDmaCompleteIsr();
+
+private:
+	IQueue<I2cRequest>& m_queue;
+	IContext& m_context;
 	I2C_HandleTypeDef*  m_hi2c = nullptr;
-	IContext* m_context = nullptr;
-	IQueue<I2cRequest>* m_queue = nullptr;
 };
 
 #endif /* STM32_I2C_BUS_H_ */

@@ -12,9 +12,11 @@
 
 namespace {
 	constexpr uint8_t QUEUE_SIZE = 10;
+	FreeRtosQueue<I2cRequest, QUEUE_SIZE> i2cRequests;
 	TaskHandle_t i2cTaskHandle;
 	FreeRtosContext i2cContext(i2cTaskHandle);
-	FreeRtosQueue<I2cRequest, QUEUE_SIZE> i2cRequests;
+	I2cBus i2cBus(i2cRequests, i2cContext);
+
 	MemoryPool<uint8_t, 32> memPool;
 	FreeRtosLock sht31Lock;
 	Sht31 sht31(&sht31Lock, memPool);
@@ -22,11 +24,11 @@ namespace {
 
 // Called from the default task in main.c
 void appInit(I2C_HandleTypeDef* hi2c) {
-	I2cBus::instance().init(hi2c, &i2cContext, &i2cRequests);
-	I2cBus::instance().submitRequest(sht31.txReq());
-	I2cBus::instance().submitRequest(sht31.rxReq());
+	i2cBus.bindHi2c(hi2c);
+	i2cBus.submitRequest(sht31.txReq());
+	i2cBus.submitRequest(sht31.rxReq());
 
-	xTaskCreate(i2cTask, "I2C Task", 256, &I2cBus::instance(), 1, &i2cTaskHandle);
+	xTaskCreate(i2cTask, "I2C Task", 256, &i2cBus, 1, &i2cTaskHandle);
 }
 
 
