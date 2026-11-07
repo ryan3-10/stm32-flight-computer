@@ -1,10 +1,10 @@
 #ifndef INTERFACES_LOCK_H_
 #define INTERFACES_LOCK_H_
 
-class ILock {
+class IMutex {
 public:
-	ILock() = default;
-	virtual ~ILock() = default;
+	IMutex() = default;
+	virtual ~IMutex() = default;
 
 	virtual void lock() = 0;
 	virtual void unlock() = 0;

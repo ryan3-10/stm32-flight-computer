@@ -7,7 +7,8 @@
 
 class FreeRtosContext : public IContext {
 public:
-	FreeRtosContext(TaskHandle_t& task) : m_task(task) {}
+	FreeRtosContext() : m_task(xTaskGetCurrentTaskHandle()) {}
+	FreeRtosContext(TaskHandle_t task) : m_task(task) {}
 
 	void sleep() override {
 		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
@@ -19,8 +20,12 @@ public:
 		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 	}
 
+	void setToCurrentContext() override {
+		m_task = xTaskGetCurrentTaskHandle();
+	}
+
 private:
-	TaskHandle_t& m_task;
+	TaskHandle_t m_task;
 };
 
 

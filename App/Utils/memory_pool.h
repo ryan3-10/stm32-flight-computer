@@ -1,7 +1,6 @@
 #ifndef UTILS_MEMORY_POOL_H_
 #define UTILS_MEMORY_POOL_H_
 
-#include "i_allocator.h"
 #include <algorithm>
 #include <array>
 #include <cassert>

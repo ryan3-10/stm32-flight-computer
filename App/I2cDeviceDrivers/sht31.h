@@ -1,46 +1,48 @@
 #ifndef I2CDEVICEDRIVERS_SHT31_H_
 #define I2CDEVICEDRIVERS_SHT31_H_
 
-#include "i_allocator.h"
+#include "i_i2c_bus.h"
 #include "i2c_device.h"
-#include "i_lock.h"
 #include <stdint.h>
 
 constexpr uint8_t TX_LENGTH = 2;
 constexpr uint8_t RX_LENGTH = 2;
 
-class Sht31 : public I2cDevice {
+class Sht31 : public I2cDevice<TX_LENGTH, RX_LENGTH> {
 public:
-	Sht31(ILock* rxMutex, IAllocator<uint8_t>& allocator) :
-		I2cDevice(
+	Sht31(II2cBus& i2cBus)
+		: I2cDevice(
 			0x44 << 1, 		// 7-bit address
 			{0x2c, 0x06}, 	// tx data, high repeat, clock stretch enabled
-			2,				// need to allocate 2 bytes for rx
-			rxMutex,		// for synchronizing read and writes to rx
-			allocator 		// for allocating memory for rx and tx
-		)
+			i2cBus,
+			0				// no delay needed
+		 )
 	{}
 
-	float lastProcessedTempF() const {
-		rxReq().mutex->lock();
-		float result = -49 + (315.0f * rawTemp() / 65535.0f);
-		rxReq().mutex->unlock();
 
-		return result;
+	float lastTempF() const {
+		return m_lastTempF;
 	}
 
-	float lastProcessedTempC() const {
-		rxReq().mutex->lock();
-		float result = -45 + (175.0f * rawTemp() / 65535.0f);
-		rxReq().mutex->unlock();
-
-		return result;
+	float lastTempC() const {
+		return m_lastTempC;
 	}
 
 private:
-	uint16_t rawTemp() const {
-		return (rxReq().data[0] << 8) | rxReq().data[1];
+	void processData(bool result) override {
+		// Only process results if transmission was successful
+		if (result) {
+			m_lastTempF = -49 + (315.0f * rawTemp() / 65535.0f);
+			m_lastTempC = -45 + (175.0f * rawTemp() / 65535.0f);
+		}
 	}
+
+	uint16_t rawTemp() const {
+			return (m_masterRx[0] << 8) | m_masterRx[1];
+	}
+
+	float m_lastTempF;
+	float m_lastTempC;
 };
 
 #endif /* I2CDEVICEDRIVERS_SHT31_H_ */

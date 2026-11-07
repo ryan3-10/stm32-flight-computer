@@ -5,6 +5,7 @@ class IContext {
 public:
 	virtual void sleep() = 0;
 	virtual void awakeFromIsr() = 0;
+	virtual void setToCurrentContext() = 0;
 };
 
 #endif /* INTERFACES_I_CONTEXT_H_ */

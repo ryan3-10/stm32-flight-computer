@@ -1,22 +1,22 @@
-#include "i_lock.h"
 #include <FreeRTOS.h>
+#include <i_mutex.h>
 #include <semphr.h>
 
 #ifndef FREERTOS_FREE_RTOS_LOCK_H_
 #define FREERTOS_FREE_RTOS_LOCK_H_
 
-class FreeRtosLock : public ILock {
+class FreeRtosMutex : public IMutex {
 public:
-	FreeRtosLock() : m_mutex(xSemaphoreCreateMutex()) {
+	FreeRtosMutex() : m_mutex(xSemaphoreCreateMutex()) {
 		configASSERT(m_mutex != NULL);
 	}
 
-	~FreeRtosLock() {
+	~FreeRtosMutex() {
 		vSemaphoreDelete(m_mutex);
 	}
 
-	FreeRtosLock(const FreeRtosLock&) = delete;
-	FreeRtosLock& operator=(const FreeRtosLock&) = delete;
+	FreeRtosMutex(const FreeRtosMutex&) = delete;
+	FreeRtosMutex& operator=(const FreeRtosMutex&) = delete;
 
 	void lock() override {
 		if (m_mutex != nullptr) {
